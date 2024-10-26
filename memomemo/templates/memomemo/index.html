@@ -1,0 +1,53 @@
+{% extends "memomemo/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="d-flex flex-row align-items-center gap-4 mb-4">   
+        <h1>My tasks</h1>
+        <button class="btn btn-secondary my-2"><a class="nav-link" href="{% url 'new' %}">New</a></button>
+    </div> 
+    
+    <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">Task</th>
+            <th scope="col">Assignee</th>
+            <th scope="col">Create on</th>
+            <th scope="col">Completed on</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+          <tr {% if task.completed %} class="table-success" {% endif %}>
+            <td>{{task.task}}</td>
+            <td>{{task.assignee}}</td>
+            <td>{{task.created_at}}</td>
+            <td>{% if task.completed %} {{task.completed_at}} {% else %} {% endif %}</td>
+            <td>
+              <div class="d-flex flex-row justify-content-center align-items-center gap-4 ">
+                <form action="/delete" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{ task.id }}" name="task_pk">
+                  <input type="submit" value="Delete">
+                </form>
+                <form action="/edit" method="get">
+                  <input type="hidden" value="{{ task.id }}" name="task_pk">
+                  <input type="submit" value="Edit">
+                </form>
+                <form action="/complete" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{ task.id }}" name="task_pk">
+                  <input type="submit" value="Complete">
+                </form>
+              </div>
+            </td>
+          </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+</div>
+
+{% endblock %}

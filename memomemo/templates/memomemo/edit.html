@@ -1,0 +1,23 @@
+{% extends "memomemo/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div class="container p-5">
+    <div class="d-flex flex-row align-items-center gap-4 mb-4">   
+        <button class="btn btn-secondary my-2"><a class="nav-link" href="{% url 'index' %}">Back</a></button>
+        <h1>Edit task</h1> 
+    </div>
+
+  <form action="/edit" method="post">
+    <div class="form-group">
+      {% csrf_token %}
+      {{ form }}
+      <input type="hidden" value="{{ task_pk }}" name="task_pk">
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+  </form>
+
+</div>
+
+{% endblock %}
