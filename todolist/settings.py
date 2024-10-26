@@ -62,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'todolist.urls'
@@ -109,9 +110,9 @@ LOCDB = {
 }
 
 if CURRENT_ENV == "Azure":
-    DATABASES = LOCDB
-else:
     DATABASES = PRODDB
+else:
+    DATABASES = LOCDB
 
 
 # Password validation
