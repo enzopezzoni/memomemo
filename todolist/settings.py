@@ -161,3 +161,4 @@ CSRF_COOKIE_DOMAIN = ".azurewebsites.net"
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://coachmee.azurewebsites.net']
 SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'None'
