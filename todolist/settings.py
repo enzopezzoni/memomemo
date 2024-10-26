@@ -159,4 +159,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CSRF_COOKIE_DOMAIN = ".azurewebsites.net"
 CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = ['https://coachmee.azurewebsites.net']
 SESSION_COOKIE_SECURE = True
