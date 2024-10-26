@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import secrets
 import os
 
 
@@ -23,13 +24,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-x_+-3g66!+1g14jtiy&-eou^uc)kqmy*2+u4zv$2(ga+&rz9q8'
+SECRET_KEY = os.environ.get(
+    "DJANGO_SECRET_KEY",
+    default=secrets.token_urlsafe(nbytes=64),
+)
+
+CURRENT_ENV = SECRET_KEY = os.environ.get(
+    "Azure",
+    default="Local",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
+if CURRENT_ENV == "Azure":
+    DEBUG = False
+    ALLOWED_HOSTS = ['coachmee.azurewebsites.net']
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -97,7 +108,10 @@ LOCDB = {
     }
 }
 
-DATABASES = LOCDB
+if CURRENT_ENV == "Azure":
+    DATABASES = LOCDB
+else:
+    DATABASES = PRODDB
 
 
 # Password validation
