@@ -29,7 +29,7 @@ SECRET_KEY = os.environ.get(
     default=secrets.token_urlsafe(nbytes=64),
 )
 
-CURRENT_ENV = SECRET_KEY = os.environ.get(
+CURRENT_ENV = os.environ.get(
     "Azure",
     default="Local",
 )
