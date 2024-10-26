@@ -30,7 +30,7 @@ SECRET_KEY = os.environ.get(
 )
 
 CURRENT_ENV = os.environ.get(
-    "Azure",
+    "CURRENT_ENV",
     default="Local",
 )
 
