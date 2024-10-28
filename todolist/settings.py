@@ -92,11 +92,11 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 PRODDB = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'db-coachme',
-        'USER': 'admin-enzo',
-        'PASSWORD': 'Pezzo121294!',
-        'HOST': 'coachmee.database.windows.net',
-        'PORT': '',
+        'NAME': os.environ.get("DB_NAME",),
+        'USER': os.environ.get("DB_USER",),
+        'PASSWORD': os.environ.get("DB_PASSWORD",),
+        'HOST': os.environ.get("DB_HOST",),
+        'PORT': '1433',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         },
