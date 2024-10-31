@@ -12,6 +12,21 @@ provider "azurerm" {
   features {}
 }
 
+# Secrets
+data "azurerm_key_vault_secret" "DB-ADMIN" {
+  name         = "DB-ADMIN"
+  key_vault_id = "/subscriptions/cb40f2db-d006-4703-bf9e-7fda6377912b/resourceGroups/rg-coachme/providers/Microsoft.KeyVault/vaults/kv-coachme"
+}
+data "azurerm_key_vault_secret" "DB-PASSWORD" {
+  name         = "DB-PASSWORD"
+  key_vault_id = "/subscriptions/cb40f2db-d006-4703-bf9e-7fda6377912b/resourceGroups/rg-coachme/providers/Microsoft.KeyVault/vaults/kv-coachme"
+}
+data "azurerm_key_vault_secret" "DJANGO-SECRET-KEY" {
+  name         = "DJANGO-SECRET-KEY"
+  key_vault_id = "/subscriptions/cb40f2db-d006-4703-bf9e-7fda6377912b/resourceGroups/rg-coachme/providers/Microsoft.KeyVault/vaults/kv-coachme"
+}
+
+
 # Resource group
 resource "azurerm_resource_group" "rg-coachme" {
     name = "rg-coachme"
@@ -72,13 +87,12 @@ resource "azurerm_linux_web_app" "coachmee" {
     name                = "coachmee"
     tags                = {}
     app_settings        = {
-        # All of this should be stored in Azure keyvault and remote state should be prefered
         "CURRENT_ENV"                    = "Azure"
         "DB_HOST"                        = "coachmee.database.windows.net"
         "DB_NAME"                        = "db-coachme"
-        "DB_PASSWORD"                    = "Pezzo121294!"
-        "DB_USER"                        = "admin-enzo"
-        "DJANGO_SECRET_KEY"              = "-womh$wyxc=k(5kf_f@*#fle630$va$pyu$&v$4*rs@ft^&g5n"
+        "DB_PASSWORD"                    = data.azurerm_key_vault_secret.DB-PASSWORD.value
+        "DB_USER"                        = data.azurerm_key_vault_secret.DB-ADMIN.value
+        "DJANGO_SECRET_KEY"              = data.azurerm_key_vault_secret.DJANGO-SECRET-KEY.value
         "SCM_DO_BUILD_DURING_DEPLOYMENT" = "1"
         }
     virtual_network_subnet_id   = azurerm_subnet.app-service.id
@@ -110,9 +124,8 @@ resource "azurerm_mssql_server" "sql-serv-coachmee" {
   resource_group_name          = azurerm_resource_group.rg-coachme.name
   location                     = azurerm_resource_group.rg-coachme.location
   version                      = "12.0"
-  # All of this should be stored in Azure keyvault and remote state should be prefered
-  administrator_login          = "admin-enzo"
-  administrator_login_password = "Pezzo121294!"
+  administrator_login          = data.azurerm_key_vault_secret.DB-ADMIN.value
+  administrator_login_password = data.azurerm_key_vault_secret.DB-PASSWORD.value
   public_network_access_enabled = false
 }
 
